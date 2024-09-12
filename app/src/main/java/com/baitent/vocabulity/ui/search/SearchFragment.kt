@@ -20,7 +20,9 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: SearchAdapter
-    private var wordList: List<CardItem> = Util().englishWords.map { CardItem(it.key, it.value) }
+    private var wordList: List<CardItem> = Util().englishWords.map {
+        CardItem(it.key, it.value.first, it.value.second)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -49,12 +51,11 @@ class SearchFragment : Fragment() {
         })
     }
 
-    // Kelimeleri filtrele
     private fun filterWords(query: String) {
         val filteredList = wordList.filter {
             it.engWord.contains(query, ignoreCase = true) || it.trWord.contains(query, ignoreCase = true)
         }
-        adapter.updateList(filteredList)  // Listeyi güncelle
+        adapter.updateList(filteredList)
     }
 
     override fun onDestroyView() {

@@ -13,8 +13,8 @@ android {
         applicationId = "com.baitent.vocabulity"
         minSdk = 23
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -70,5 +70,6 @@ dependencies {
     implementation (libs.androidx.viewpager2)
     implementation (libs.androidx.appcompat.v161)
     implementation (libs.androidx.fragment.ktx)
+    implementation ("com.google.code.gson:gson:2.11.0")
 
 }

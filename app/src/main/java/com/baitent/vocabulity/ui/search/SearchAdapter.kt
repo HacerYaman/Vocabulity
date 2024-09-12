@@ -12,10 +12,10 @@ class SearchAdapter(
     private var items: List<CardItem>
 ) : RecyclerView.Adapter<SearchAdapter.Search>() {
 
-    // ViewHolder sınıfı ile her bir kelimeyi tutacağız
     class Search(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val englishWordTextView: TextView = itemView.findViewById(R.id.englishWord)
         val turkishWordTextView: TextView = itemView.findViewById(R.id.turkishWord)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Search {
@@ -31,9 +31,8 @@ class SearchAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    // Filtreleme işlemi için listeyi güncelle
     fun updateList(newItems: List<CardItem>) {
         items = newItems
-        notifyDataSetChanged() // Verileri güncelle
+        notifyDataSetChanged()
     }
 }

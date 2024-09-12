@@ -1,5 +1,7 @@
 package com.baitent.vocabulity.data.model
 
 data class CardItem(
-    val word: String
+    val engWord: String,
+    val trWord: String,
+    val exampleSentence: String
 )

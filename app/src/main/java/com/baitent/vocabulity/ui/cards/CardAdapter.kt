@@ -5,13 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.baitent.vocabulity.R
 import com.baitent.vocabulity.data.model.CardItem
 
 class CardAdapter(
-    private val items: List<CardItem>
+    private var items: List<CardItem>
 ) : BaseAdapter() {
+
+    fun updateItems(newItems: List<CardItem>) {
+        this.items = newItems
+        notifyDataSetChanged()
+    }
 
     override fun getCount(): Int = items.size
 
@@ -21,9 +25,15 @@ class CardAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.item_card, parent, false)
-        val wordTextView: TextView = view.findViewById(R.id.wordTextView)
-        val item = getItem(position) as CardItem
-        wordTextView.text = item.word
+        val englishWordtv: TextView = view.findViewById(R.id.english)
+        val turkishWordtv: TextView = view.findViewById(R.id.turkish)
+
+        val cardItem = items[position]
+
+        englishWordtv.text = cardItem.engWord
+        turkishWordtv.text = cardItem.trWord
+
         return view
     }
 }
+

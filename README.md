@@ -53,3 +53,4 @@ Kullanıcılar, kart listesini yukarıdan aşağı çekerek listeyi yenileyebili
 
 <img src="https://github.com/user-attachments/assets/cf31f985-b2ab-4f86-848c-c5dd546e8406" alt="4" width="400">
 
+Destekleri için Oğuzhan Özgökçe'ye teşekkürler :))  

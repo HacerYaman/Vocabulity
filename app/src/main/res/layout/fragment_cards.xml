@@ -7,6 +7,16 @@
     android:padding="16dp"
     android:background="@color/bground">
 
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/word"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ImageView>
     <ImageButton
         android:id="@+id/info"
         android:layout_width="32dp"

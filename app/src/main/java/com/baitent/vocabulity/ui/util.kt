@@ -12,29 +12,13 @@ class SharedPreferencesUtil(context: Context) {
         context.getSharedPreferences("VocabularyPrefs", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun saveLearnedCards(cards: List<CardItem>) {
-        val json = gson.toJson(cards)
-        sharedPreferences.edit().putString("learnedCards", json).apply()
-    }
+
     fun getLearnedCards(): List<CardItem> {
         val json = sharedPreferences.getString("learnedCards", null)
         if (json.isNullOrEmpty()) return emptyList()
         val type = object : TypeToken<List<CardItem>>() {}.type
         return gson.fromJson(json, type)
     }
-
-    fun getNotLearnedCards(): List<CardItem> {
-        val json = sharedPreferences.getString("notLearnedCards", null)
-        if (json.isNullOrEmpty()) return emptyList()
-        val type = object : TypeToken<List<CardItem>>() {}.type
-        return gson.fromJson(json, type)
-    }
-    fun saveNotLearnedCards(cards: List<CardItem>) {
-        val json = gson.toJson(cards)
-        sharedPreferences.edit().putString("notLearnedCards", json).apply()
-    }
-
-
 }
 class Util {
         val englishWords: Map<String, Pair<String, String>> = mapOf(

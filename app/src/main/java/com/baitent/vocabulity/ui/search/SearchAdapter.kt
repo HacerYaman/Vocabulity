@@ -10,20 +10,19 @@ import com.baitent.vocabulity.data.model.CardItem
 
 class SearchAdapter(
     private var items: List<CardItem>
-) : RecyclerView.Adapter<SearchAdapter.Search>() {
+) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
-    class Search(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val englishWordTextView: TextView = itemView.findViewById(R.id.englishWord)
         val turkishWordTextView: TextView = itemView.findViewById(R.id.turkishWord)
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Search {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
-        return Search(view)
+        return SearchViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: Search, position: Int) {
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val wordItem = items[position]
         holder.englishWordTextView.text = wordItem.engWord
         holder.turkishWordTextView.text = wordItem.trWord

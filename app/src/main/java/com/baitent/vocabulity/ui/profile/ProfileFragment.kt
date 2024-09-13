@@ -21,13 +21,11 @@ class ProfileFragment : Fragment() {
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        // ViewPager ve Adapter'ı ayarla
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
 
         viewPager.adapter = ViewPagerAdapter(requireActivity())
 
-        // TabLayout ve ViewPager'ı bağla
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "Learned"
@@ -49,7 +47,6 @@ class ProfileFragment : Fragment() {
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> LearnedFragment()  // Learned tabı
-                1 -> NotLearnedFragment()  // Not Learned tabı
                 else -> LearnedFragment()
             }
         }

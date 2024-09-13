@@ -30,7 +30,6 @@ class LearnedNotLearnedAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    // Listeyi güncellemek için kullanılacak bir metod
     fun updateList(newItems: List<CardItem>) {
         items = newItems
         notifyDataSetChanged()

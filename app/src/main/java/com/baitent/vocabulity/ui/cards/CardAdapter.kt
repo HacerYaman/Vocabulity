@@ -25,13 +25,13 @@ class CardAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.item_card, parent, false)
-        val englishWordTv: TextView = view.findViewById(R.id.english)
-        val turkishWordTv: TextView = view.findViewById(R.id.turkish)
+        val englishWordtv: TextView = view.findViewById(R.id.english)
+        val turkishWordtv: TextView = view.findViewById(R.id.turkish)
 
         val cardItem = items[position]
 
-        englishWordTv.text = cardItem.engWord
-        turkishWordTv.text = cardItem.trWord
+        englishWordtv.text = cardItem.engWord
+        turkishWordtv.text = cardItem.trWord
 
         return view
     }

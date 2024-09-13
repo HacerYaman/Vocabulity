@@ -7,6 +7,5 @@ import androidx.room.PrimaryKey
 data class CardItem(
     @PrimaryKey val engWord: String,  // İngilizce kelimeyi primary key olarak kullanıyoruz
     val trWord: String,
-    val description: String = "",     // Opsiyonel bir açıklama, boş bırakılabilir
-    val status: String = "not_learned" // Varsayılan değer olarak 'not_learned'
+    val exampleSentence: String
 )

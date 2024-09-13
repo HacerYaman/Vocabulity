@@ -21,7 +21,7 @@ class SearchFragment : Fragment() {
 
     private lateinit var adapter: SearchAdapter
     private var wordList: List<CardItem> = Util().englishWords.map {
-        CardItem(it.key, it.value.first, )
+        CardItem(it.key, it.value.first, "as" )
     }
 
     override fun onCreateView(

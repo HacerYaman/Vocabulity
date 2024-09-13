@@ -8,5 +8,5 @@ data class CardItem(
     @PrimaryKey val engWord: String,
     val trWord: String,
     val exampleSentence: String,
-    var status: String = "notLearned"  // Başlangıçta 'notLearned' olarak ayarladık
+    var status: String = "all"  // Başlangıçta 'notLearned' olarak ayarladık
 )

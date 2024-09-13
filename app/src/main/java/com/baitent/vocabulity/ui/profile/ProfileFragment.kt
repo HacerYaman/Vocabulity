@@ -1,56 +1,70 @@
 package com.baitent.vocabulity.ui.profile
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.baitent.vocabulity.R
 import com.baitent.vocabulity.databinding.FragmentProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    private val profileViewModel by viewModels<ProfileViewModel>()
-    private lateinit var profileAdapter: ProfileAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private val viewModel: ProfileViewModel by viewModels()
+    private lateinit var adapter: ProfileAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentProfileBinding.bind(view)
 
         setupRecyclerView()
+
+        // İlk olarak "learned" butonu disable olduğundan, learned kartları yükle
+        viewModel.loadLearnedCards()
         observeLearnedCards()
 
-        profileViewModel.loadLearnedCards()
+        // "Not Learned" butonuna basıldığında not learned kartlarını yükle
+        binding.notLearned.setOnClickListener {
+            binding.notLearned.isEnabled = false
+            binding.learned.isEnabled = true
 
-    }
+            viewModel.loadNotLearnedCards()
+            observeNotLearnedCards()
+        }
 
-    private fun setupRecyclerView() {
-        profileAdapter = ProfileAdapter(emptyList())
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = this@ProfileFragment.profileAdapter
+        // "Learned" butonuna basıldığında learned kartlarını yükle
+        binding.learned.setOnClickListener {
+            binding.learned.isEnabled = false
+            binding.notLearned.isEnabled = true
+
+            viewModel.loadLearnedCards()
+            observeLearnedCards()
         }
     }
 
+    // RecyclerView'ı ayarlama
+    private fun setupRecyclerView() {
+        adapter = ProfileAdapter(emptyList())
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
+    }
+
+    // Learned kartları gözlemleme
     private fun observeLearnedCards() {
-        profileViewModel.learnedCards.observe(viewLifecycleOwner, Observer { learnedCards ->
-            // Adapter'e gelen verileri güncelle
-            profileAdapter.updateItems(learnedCards)
+        viewModel.learnedCards.observe(viewLifecycleOwner, Observer { cards ->
+            adapter.updateItems(cards)
+        })
+    }
+
+    // Not Learned kartları gözlemleme
+    private fun observeNotLearnedCards() {
+        viewModel.notLearnedCards.observe(viewLifecycleOwner, Observer { cards ->
+            adapter.updateItems(cards)
         })
     }
 

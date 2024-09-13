@@ -31,5 +31,4 @@ object LocalModule {
     @Provides
     @Singleton
     fun provideUtil(): Util = Util()
-
 }

@@ -28,34 +28,27 @@ class CardsViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(CardsUiState())
     val uiState: StateFlow<CardsUiState> = _uiState.asStateFlow()
 
-    // Kartı "learned" olarak işaretleme fonksiyonu
     fun markAsLearned(cardItem: CardItem) {
         viewModelScope.launch {
-            // Veritabanında kartın durumunu güncelle
             cardRepository.updateCardStatus(cardItem.engWord, "learned")
         }
     }
 
-    // Kartı "notLearned" olarak işaretleme fonksiyonu
     fun markAsNotLearned(cardItem: CardItem) {
         viewModelScope.launch {
-            // Veritabanında kartın durumunu güncelle
             cardRepository.updateCardStatus(cardItem.engWord, "notLearned")
         }
     }
 
-    // Yeni kart ekleme
     fun addCard(cardItem: CardItem) {
         viewModelScope.launch {
             cardRepository.insertCard(cardItem)
         }
     }
 
-    // Tüm kartları getirme
     fun getAllCards() {
         viewModelScope.launch {
             val cards = cardRepository.getAllCards()
-            // UI'ye güncel veri gönderme işlemi burada yapılabilir
         }
     }
 }

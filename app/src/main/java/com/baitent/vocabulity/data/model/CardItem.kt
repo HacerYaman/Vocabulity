@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "cards")
 data class CardItem(
-    @PrimaryKey val engWord: String,  // İngilizce kelimeyi primary key olarak kullanıyoruz
+    @PrimaryKey val engWord: String,
     val trWord: String,
-    val exampleSentence: String
+    val exampleSentence: String,
+    var status: String = "notLearned"  // Başlangıçta 'notLearned' olarak ayarladık
 )

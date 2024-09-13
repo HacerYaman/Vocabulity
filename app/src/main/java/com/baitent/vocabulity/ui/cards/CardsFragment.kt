@@ -1,9 +1,10 @@
 package com.baitent.vocabulity.ui.cards
-
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,10 +16,12 @@ import com.baitent.vocabulity.ui.Util
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
+import android.app.AlertDialog
 
 @AndroidEntryPoint
-class CardsFragment : Fragment() {
+class CardsFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private var _binding: FragmentCardsBinding? = null
     private val binding get() = _binding!!
@@ -28,13 +31,14 @@ class CardsFragment : Fragment() {
     private val learnedItems = mutableListOf<CardItem>()
     private val notLearnedItems = mutableListOf<CardItem>()
 
-    // Repository kullanımı için
     @Inject
     lateinit var cardRepository: CardRepository
 
     private var cardItemsList = Util().englishWords.map {
-        CardItem(it.key, it.value.first, it.value.second)  // CardItem yapısına uygun hale getir
+        CardItem(it.key, it.value.first, it.value.second)
     }.toMutableList()
+
+    private lateinit var tts: TextToSpeech
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +53,59 @@ class CardsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupSwipeFling()
         collectState()
+
+        // TextToSpeech başlat
+        tts = TextToSpeech(requireContext(), this)
+
+        // Info butonuna tıklama dinleyici ekleyelim
+        binding.info.setOnClickListener {
+            showInfoDialog()
+        }
+
+        // texttospeach butonuna basıldığında karttaki kelimeyi seslendir
+        binding.swipe.setOnItemClickListener { _, _, position, _ ->
+            val currentCard = cardItemsList[position]
+            speak(currentCard.engWord)
+        }
+    }
+
+    private fun showInfoDialog() {
+        // AlertDialog oluştur ve göster
+        AlertDialog.Builder(requireContext())
+            .setTitle("Nasıl Kullanılır?")
+            .setMessage(
+                "• Öğrendi olarak işaretlemek için sağa kaydırın.\n" +
+                        "• Öğrenmedi olarak işaretlemek için sola kaydırın.\n" +
+                        "• Detay için karta basılı tutun."
+            )
+            .setPositiveButton("Tamam") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.US)  // İngilizce dil ayarı
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                println("Dil desteklenmiyor")
+            }
+        }
+    }
+
+    private fun speak(text: String) {
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+
+        if (::tts.isInitialized) {
+            tts.stop()
+            tts.shutdown()
+        }
     }
 
     private fun setupSwipeFling() {
@@ -66,12 +123,11 @@ class CardsFragment : Fragment() {
             override fun onLeftCardExit(card: Any?) {
                 val cardItem = cardItemsList.firstOrNull()
                 cardItem?.let {
-                    // Öğrenilmemiş olarak işaretle
                     notLearnedItems.add(it)
                     it.status = "notLearned"
                     cardItemsList.remove(it)
                     adapter.updateItems(cardItemsList)
-                    // Room veritabanında güncelleme yap
+
                     lifecycleScope.launch {
                         cardRepository.updateCardStatus(it.engWord, "notLearned")
                     }
@@ -81,12 +137,11 @@ class CardsFragment : Fragment() {
             override fun onRightCardExit(card: Any?) {
                 val cardItem = cardItemsList.firstOrNull()
                 cardItem?.let {
-                    // Öğrenildi olarak işaretle
                     learnedItems.add(it)
                     it.status = "learned"
                     cardItemsList.remove(it)
                     adapter.updateItems(cardItemsList)
-                    // Room veritabanında güncelleme yap
+
                     lifecycleScope.launch {
                         cardRepository.updateCardStatus(it.engWord, "learned")
                     }
@@ -111,10 +166,5 @@ class CardsFragment : Fragment() {
         viewModel.uiState.collect(viewLifecycleOwner) { state ->
             // UI state'i gerektiği gibi işleyebilirsiniz
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -12,6 +12,7 @@ import com.baitent.vocabulity.data.model.CardItem
 import com.baitent.vocabulity.databinding.FragmentSearchBinding
 import com.baitent.vocabulity.ui.Util
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -21,7 +22,7 @@ class SearchFragment : Fragment() {
 
     private lateinit var adapter: SearchAdapter
     private var wordList: List<CardItem> = Util().englishWords.map {
-        CardItem(it.key, it.value.first, "as" )
+        CardItem(it.key, it.value.first, "as")
     }
 
     override fun onCreateView(
@@ -34,12 +35,18 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // RecyclerView ve Adapter'ı ayarla
+        // Setup RecyclerView and Adapter
         adapter = SearchAdapter(wordList)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        // Search input dinleme
+        // Setup Swipe to Refresh
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            shuffleWordList()
+            binding.swipeRefreshLayout.isRefreshing = false  // Stop the refreshing animation
+        }
+
+        // Listen to search input changes
         binding.searchInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -49,6 +56,11 @@ class SearchFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+    }
+
+    private fun shuffleWordList() {
+        wordList = wordList.shuffled(Random(System.currentTimeMillis()))
+        adapter.updateList(wordList)
     }
 
     private fun filterWords(query: String) {

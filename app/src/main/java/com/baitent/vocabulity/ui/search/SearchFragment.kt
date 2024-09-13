@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baitent.vocabulity.data.model.CardItem
 import com.baitent.vocabulity.databinding.FragmentSearchBinding
@@ -35,18 +36,25 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Setup RecyclerView and Adapter
-        adapter = SearchAdapter(wordList)
+        val navController = findNavController()
+
+        adapter = SearchAdapter(wordList) { selectedItem ->
+            val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(
+                selectedItem.engWord,
+                selectedItem.trWord,
+                selectedItem.exampleSentence
+            )
+            navController.navigate(action)
+        }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        // Setup Swipe to Refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
             shuffleWordList()
-            binding.swipeRefreshLayout.isRefreshing = false  // Stop the refreshing animation
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
-        // Listen to search input changes
         binding.searchInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 

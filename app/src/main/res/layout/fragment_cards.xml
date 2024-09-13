@@ -34,6 +34,7 @@
         android:text="texwejshfjhdakdhakj"
         android:textColor="@color/black"
         android:textSize="18dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/swipe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

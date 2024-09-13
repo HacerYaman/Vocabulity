@@ -9,7 +9,8 @@ import com.baitent.vocabulity.R
 import com.baitent.vocabulity.data.model.CardItem
 
 class SearchAdapter(
-    private var items: List<CardItem>
+    private var items: List<CardItem>,
+    private val onItemClick: (CardItem) -> Unit // Tıklama işlemi için lambda fonksiyonu
 ) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,6 +27,11 @@ class SearchAdapter(
         val wordItem = items[position]
         holder.englishWordTextView.text = wordItem.engWord
         holder.turkishWordTextView.text = wordItem.trWord
+
+        // Item'e tıklanınca bu işlemi çağır
+        holder.itemView.setOnClickListener {
+            onItemClick(wordItem)
+        }
     }
 
     override fun getItemCount(): Int = items.size
@@ -35,3 +41,4 @@ class SearchAdapter(
         notifyDataSetChanged()
     }
 }
+

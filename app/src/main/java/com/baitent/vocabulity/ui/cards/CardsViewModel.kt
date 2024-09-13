@@ -39,16 +39,4 @@ class CardsViewModel @Inject constructor(
             cardRepository.updateCardStatus(cardItem.engWord, "notLearned")
         }
     }
-
-    fun addCard(cardItem: CardItem) {
-        viewModelScope.launch {
-            cardRepository.insertCard(cardItem)
-        }
-    }
-
-    fun getAllCards() {
-        viewModelScope.launch {
-            val cards = cardRepository.getAllCards()
-        }
-    }
 }

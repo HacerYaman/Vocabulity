@@ -1,41 +1,7 @@
 package com.baitent.vocabulity.ui
 
-import android.content.Context
-import android.content.SharedPreferences
 import com.baitent.vocabulity.data.model.CardItem
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
-class SharedPreferencesUtil(context: Context) {
-
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("VocabularyPrefs", Context.MODE_PRIVATE)
-    private val gson = Gson()
-
-//    fun saveLearnedCards(cards: List<CardItem>) {
-//        val json = gson.toJson(cards)
-//        sharedPreferences.edit().putString("learnedCards", json).apply()
-//    }
-    fun getLearnedCards(): List<CardItem> {
-        val json = sharedPreferences.getString("learnedCards", null)
-        if (json.isNullOrEmpty()) return emptyList()
-        val type = object : TypeToken<List<CardItem>>() {}.type
-        return gson.fromJson(json, type)
-    }
-
-//    fun getNotLearnedCards(): List<CardItem> {
-//        val json = sharedPreferences.getString("notLearnedCards", null)
-//        if (json.isNullOrEmpty()) return emptyList()
-//        val type = object : TypeToken<List<CardItem>>() {}.type
-//        return gson.fromJson(json, type)
-//    }
-//    fun saveNotLearnedCards(cards: List<CardItem>) {
-//        val json = gson.toJson(cards)
-//        sharedPreferences.edit().putString("notLearnedCards", json).apply()
-//    }
-
-
-}
 class Util {
     val englishWords: Map<String, Pair<String, String>> = mapOf(
         "apple" to ("elma" to "She ate an apple for breakfast."),
@@ -119,4 +85,14 @@ class Util {
         "honey" to ("bal" to "She drizzled honey over the pancakes."),
         "jam" to ("reçel" to "He spread jam on his toast.")
     )
+
+    fun toCardItemList(): List<CardItem> {
+        return englishWords.map { entry ->
+            CardItem(
+                engWord = entry.key,
+                trWord = entry.value.first,
+                exampleSentence = entry.value.second
+            )
+        }
+    }
 }

@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Room
 import com.baitent.vocabulity.data.source.local.CardDao
 import com.baitent.vocabulity.data.source.local.RoomDB
+import com.baitent.vocabulity.ui.Util
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -25,4 +27,9 @@ object LocalModule {
 
     @Provides
     fun provideMainDao(database: RoomDB): CardDao = database.mainDao()
+
+    @Provides
+    @Singleton
+    fun provideUtil(): Util = Util()
+
 }

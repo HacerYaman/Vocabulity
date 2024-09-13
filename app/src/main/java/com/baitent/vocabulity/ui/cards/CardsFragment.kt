@@ -54,15 +54,12 @@ class CardsFragment : Fragment(), TextToSpeech.OnInitListener {
         setupSwipeFling()
         collectState()
 
-        // TextToSpeech başlat
         tts = TextToSpeech(requireContext(), this)
 
-        // Info butonuna tıklama dinleyici ekleyelim
         binding.info.setOnClickListener {
             showInfoDialog()
         }
 
-        // texttospeach butonuna basıldığında karttaki kelimeyi seslendir
         binding.swipe.setOnItemClickListener { _, _, position, _ ->
             val currentCard = cardItemsList[position]
             speak(currentCard.engWord)
@@ -70,7 +67,6 @@ class CardsFragment : Fragment(), TextToSpeech.OnInitListener {
     }
 
     private fun showInfoDialog() {
-        // AlertDialog oluştur ve göster
         AlertDialog.Builder(requireContext())
             .setTitle("Nasıl Kullanılır?")
             .setMessage(
@@ -123,28 +119,26 @@ class CardsFragment : Fragment(), TextToSpeech.OnInitListener {
             override fun onLeftCardExit(card: Any?) {
                 val cardItem = cardItemsList.firstOrNull()
                 cardItem?.let {
-                    notLearnedItems.add(it)
+                    notLearnedItems.add(it) // Yerel listeye ekleme
                     it.status = "notLearned"
                     cardItemsList.remove(it)
                     adapter.updateItems(cardItemsList)
 
-                    lifecycleScope.launch {
-                        cardRepository.updateCardStatus(it.engWord, "notLearned")
-                    }
+                    // `markAsNotLearned` fonksiyonu çağrılarak veritabanına kaydediliyor
+                    viewModel.markAsNotLearned(it)
                 }
             }
 
             override fun onRightCardExit(card: Any?) {
                 val cardItem = cardItemsList.firstOrNull()
                 cardItem?.let {
-                    learnedItems.add(it)
+                    learnedItems.add(it) // Yerel listeye ekleme
                     it.status = "learned"
                     cardItemsList.remove(it)
                     adapter.updateItems(cardItemsList)
 
-                    lifecycleScope.launch {
-                        cardRepository.updateCardStatus(it.engWord, "learned")
-                    }
+                    // `markAsLearned` fonksiyonu çağrılarak veritabanına kaydediliyor
+                    viewModel.markAsLearned(it)
                 }
             }
 

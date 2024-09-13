@@ -5,15 +5,40 @@ import com.baitent.vocabulity.data.source.local.CardDao
 import com.baitent.vocabulity.data.source.local.CardRepository
 import javax.inject.Inject
 
-class CardRepositoryImpl @Inject constructor(private val cardDao: CardDao) : CardRepository {
+class CardRepositoryImpl @Inject constructor(
+    private val cardDao: CardDao
+) : CardRepository {
 
-    override suspend fun getAllCards(): List<CardItem> = cardDao.getAllCards()
+    override suspend fun getAllCards(): List<CardItem> {
+        val cards = cardDao.getAllCards()
+        println("All Cards: ${cards.map { it.engWord }}")
+        return cards
+    }
 
-    override suspend fun getNotLearnedCards(): List<CardItem> = cardDao.getNotLearnedCards()
+    override suspend fun getNotLearnedCards(): List<CardItem> {
+        val cards = cardDao.getNotLearnedCards()
+        println("Not Learned Cards: ${cards.map { it.engWord }}")
+        return cards
+    }
 
-    override suspend fun getLearnedCards(): List<CardItem> = cardDao.getLearnedCards()
+    override suspend fun getLearnedCards(): List<CardItem> {
+        val cards = cardDao.getLearnedCards()
+        println("Learned Cards: ${cards.map { it.engWord }}")
+        return cards
+    }
 
-    override suspend fun insertCard(cardItem: CardItem) = cardDao.insertCard(cardItem)
+    override suspend fun insertCard(cardItem: CardItem) {
+        cardDao.insertCard(cardItem)
+        println("Inserted Card: ${cardItem.engWord}")
+    }
 
-    override suspend fun updateCardStatus(engWord: String, status: String) = cardDao.updateCardStatus(engWord, status)
+    override suspend fun insertAll(cards: List<CardItem>) {
+        cardDao.insertAll(cards)
+        println("Inserted All Cards: ${cards.map { it.engWord }}") // Eklenen kartları yazdır
+    }
+
+    override suspend fun updateCardStatus(engWord: String, status: String) {
+        cardDao.updateCardStatus(engWord, status)
+        println("Updated Card Status: $engWord, Status: $status")
+    }
 }

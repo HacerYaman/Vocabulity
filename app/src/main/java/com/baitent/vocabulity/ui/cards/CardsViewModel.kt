@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baitent.vocabulity.data.model.CardItem
 import com.baitent.vocabulity.data.source.local.CardRepository
+import com.baitent.vocabulity.ui.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,23 +14,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CardsViewModel @Inject constructor(
-    private val cardRepository: CardRepository // CardRepository'yi ekledik
+    private val cardRepository: CardRepository,
+    private val util: Util
 ) : ViewModel() {
+
+    fun insertCardsIntoDatabase() {
+        viewModelScope.launch {
+            val cardList = util.toCardItemList()
+            cardRepository.insertAll(cardList)
+        }
+    }
 
     private var _uiState = MutableStateFlow(CardsUiState())
     val uiState: StateFlow<CardsUiState> = _uiState.asStateFlow()
 
-    // Kartı 'öğrenildi' olarak işaretle ve veritabanına kaydet
+    // Kartı "learned" olarak işaretleme fonksiyonu
     fun markAsLearned(cardItem: CardItem) {
         viewModelScope.launch {
+            // Veritabanında kartın durumunu güncelle
             cardRepository.updateCardStatus(cardItem.engWord, "learned")
         }
     }
 
-    // Kartı 'öğrenilmedi' olarak işaretle ve veritabanına kaydet
+    // Kartı "notLearned" olarak işaretleme fonksiyonu
     fun markAsNotLearned(cardItem: CardItem) {
         viewModelScope.launch {
-            cardRepository.updateCardStatus(cardItem.engWord, "not learned")
+            // Veritabanında kartın durumunu güncelle
+            cardRepository.updateCardStatus(cardItem.engWord, "notLearned")
         }
     }
 
